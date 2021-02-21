@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -7,6 +7,8 @@ namespace Solution
 
     public class NotesStore
     {
+
+        public List<string> data = new List<string>();
         public NotesStore() { }
         public void AddNote(String state, String name)
         {
@@ -18,12 +20,24 @@ namespace Solution
             {
                 throw new ArgumentException("Invalid state {0}", state);
             }
+            data.Add(name);
+
 
         }
-        public List<String> GetNotes(String state) { }
+        public List<String> GetNotes(String state) 
+        {
+            if (state != "active" || state != "completed" || state != "others")
+            {
+                throw new ArgumentException("Invalid state {0}", state);
+            }
+            else
+            {
+                return data;
+            }
+        }
     }
 
-    public class Solution
+    public class Solution2
     {
         public static void Main()
         {
