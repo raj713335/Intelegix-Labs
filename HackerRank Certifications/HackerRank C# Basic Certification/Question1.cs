@@ -1,52 +1,96 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Solution
 {
 
-    public class NotesStore
+    public class Team
     {
-        public NotesStore() { }
-        public void AddNote(String state, String name)
+
+        public string teamName;
+        public int noOfPlayers;
+
+
+        public Team(string teamName, int noOfPlayers)
         {
-
-
+            this.teamName = teamName;
+            this.noOfPlayers = noOfPlayers;
         }
-        public List<String> GetNotes(String state) { }
+
+        public void AddPlayer(int count)
+        {
+            noOfPlayers += count;
+        }
+
+        public bool RemovePlayer(int count)
+        {
+            if (noOfPlayers - count < 0)
+            {
+                return false;
+            }
+            else
+            {
+                noOfPlayers -= count;
+                return true;
+            }
+        }
     }
 
-    public class Solution
+    public class Subteam : Team
     {
-        public static void Main()
+
+
+        public Subteam(string teamName, int noOfplayers) :base(teamName,noOfplayers){ 
+
+        }
+
+        public void ChangeTeamName(string name)
         {
-            var notesStoreObj = new NotesStore();
-            var n = int.Parse(Console.ReadLine());
-            for (var i = 0; i < n; i++)
+            teamName = name;
+        }
+    }
+    class Solution
+    {
+        static void Main(string[] args)
+        {
+
+            if (!typeof(Subteam).IsSubclassOf(typeof(Team)))
             {
-                var operationInfo = Console.ReadLine().Split(' ');
-                try
-                {
-                    if (operationInfo[0] == "AddNote")
-                        notesStoreObj.AddNote(operationInfo[1], operationInfo.Length == 2 ? "" : operationInfo[2]);
-                    else if (operationInfo[0] == "GetNotes")
-                    {
-                        var result = notesStoreObj.GetNotes(operationInfo[1]);
-                        if (result.Count == 0)
-                            Console.WriteLine("No Notes");
-                        else
-                            Console.WriteLine(string.Join(",", result));
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid Parameter");
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Error: " + e.Message);
-                }
+                throw new Exception("Subteam class should inherit from Team class");
             }
+
+            String str = Console.ReadLine();
+            String[] strArr = str.Split();
+            string initialName = strArr[0];
+            int count = Convert.ToInt32(strArr[1]);
+            Subteam teamObj = new Subteam(initialName, count);
+            Console.WriteLine("Team " + teamObj.teamName + " created");
+
+            str = Console.ReadLine();
+            count = Convert.ToInt32(str);
+            Console.WriteLine("Current number of players in team " + teamObj.teamName + " is " + teamObj.noOfPlayers);
+            teamObj.AddPlayer(count);
+            Console.WriteLine("New number of players in team " + teamObj.teamName + " is " + teamObj.noOfPlayers);
+
+
+            str = Console.ReadLine();
+            count = Convert.ToInt32(str);
+            Console.WriteLine("Current number of players in team " + teamObj.teamName + " is " + teamObj.noOfPlayers);
+            var res = teamObj.RemovePlayer(count);
+            if (res)
+            {
+                Console.WriteLine("New number of players in team " + teamObj.teamName + " is " + teamObj.noOfPlayers);
+            }
+            else
+            {
+                Console.WriteLine("Number of players in team " + teamObj.teamName + " remains same");
+            }
+
+            str = Console.ReadLine();
+            teamObj.ChangeTeamName(str);
+            Console.WriteLine("Team name of team " + initialName + " changed to " + teamObj.teamName);
         }
     }
 }
